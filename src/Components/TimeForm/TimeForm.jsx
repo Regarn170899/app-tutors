@@ -26,9 +26,12 @@ const TimeForm = (props) => {
     const [timeForm, setTimeForm] = useState(initialTimeForm)
 
     function ArrayTimeForm() {
+        debugger;
         props.setTimeFormResult([...props.timeFormResult, timeForm])
-        setTimeForm(...initialTimeForm)
+        setTimeForm({...initialTimeForm})
     }
+    console.log(timeForm)
+    return (
     <Form
         name="basic"
         labelCol={{
@@ -63,14 +66,15 @@ const TimeForm = (props) => {
             <Input/>
         </Form.Item>
         <Form.Item
-            onChange={(e) => {
-                setTimeForm({...timeForm, subject: e.target.value})
-            }}
+
             name="gender"
             label="Gender"
             rules={[{required: true}]}
         >
             <Select
+                onChange={(e) => {
+                    setTimeForm({...timeForm, subject: e})
+                }}
                 placeholder="Select a option and change input text above"
                 allowClear
             >
@@ -80,13 +84,15 @@ const TimeForm = (props) => {
             </Select>
         </Form.Item>
         <Form.Item
-            onChange={(e) => {
-                setTimeForm({...timeForm, time: e.target.value})
-            }}
+
             name="time-picker"
             label="TimePicker" {...config}
         >
-            <TimePicker/>
+            <TimePicker
+                onChange={(e) => {
+                    setTimeForm({...timeForm, time: e.format('HH:mm:ss')})
+                }}
+            />
         </Form.Item>
         <Form.Item
             wrapperCol={{
@@ -99,5 +105,6 @@ const TimeForm = (props) => {
             </Button>
         </Form.Item>
     </Form>
+    )
 };
 export default TimeForm;
