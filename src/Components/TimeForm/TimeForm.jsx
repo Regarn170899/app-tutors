@@ -5,7 +5,7 @@ const config = {
         {
             type: 'object',
             required: true,
-            message: 'Please select time!',
+            message: 'Укажите время',
         },
     ],
 };
@@ -13,16 +13,18 @@ const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
 };
 const TimeForm = (props) => {
+    const [form] = Form.useForm();
     const onFinish = (values) => {
         const timeFormat = {
             ...values,
             time : values.time.format('HH:mm:ss'),
         }
         props.setTimeFormResult([...props.timeFormResult, timeFormat])
-        console.log(props.timeFormResult)
+        form.resetFields();
     };
     return (
     <Form
+        form={form}
         name="basic"
         labelCol={{
             span: 8,
@@ -41,12 +43,12 @@ const TimeForm = (props) => {
         autoComplete="off"
     >
         <Form.Item
-            label="Username"
+            label="Имя"
             name="name"
             rules={[
                 {
                     required: true,
-                    message: 'Please input your username!',
+                    message: 'Введите имя',
                 },
             ]}
         >
@@ -55,22 +57,26 @@ const TimeForm = (props) => {
         <Form.Item
 
             name="subject"
-            label="Gender"
-            rules={[{required: true}]}
+            label="Предмет"
+            rules={[
+                {required: true,
+                message: 'Выберите предмет'
+                },
+            ]}
         >
             <Select
-                placeholder="Select a option and change input text above"
+                placeholder="Выберите предмет"
                 allowClear
             >
-                <Option value="male">male</Option>
-                <Option value="female">female</Option>
-                <Option value="other">other</Option>
+                <Option value="Russian">Русский язык</Option>
+                <Option value="Math">Математика</Option>
+                <Option value="English">Английский язык</Option>
             </Select>
         </Form.Item>
         <Form.Item
 
             name="time"
-            label="TimePicker" {...config}
+            label="Время" {...config}
         >
             <TimePicker
             />
@@ -82,7 +88,7 @@ const TimeForm = (props) => {
             }}
         >
             <Button type="primary" htmlType="submit">
-                Submit
+                Сохранить
             </Button>
         </Form.Item>
     </Form>
