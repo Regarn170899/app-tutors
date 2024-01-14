@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import {Button, Form, Input, Select, TimePicker} from 'antd';
 const { Option } = Select;
 const config = {
@@ -10,27 +9,18 @@ const config = {
         },
     ],
 };
-const onFinish = (values) => {
-    console.log('Success:', values);
-};
 const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
 };
-
-const initialTimeForm = {
-    name : '',
-    subject : '',
-    time : '',
-}
 const TimeForm = (props) => {
-    const [timeForm, setTimeForm] = useState(initialTimeForm)
-
-    function ArrayTimeForm() {
-        debugger;
-        props.setTimeFormResult([...props.timeFormResult, timeForm])
-        setTimeForm({...initialTimeForm})
-    }
-    console.log(timeForm)
+    const onFinish = (values) => {
+        const timeFormat = {
+            ...values,
+            time : values.time.format('HH:mm:ss'),
+        }
+        props.setTimeFormResult([...props.timeFormResult, timeFormat])
+        console.log(props.timeFormResult)
+    };
     return (
     <Form
         name="basic"
@@ -51,11 +41,8 @@ const TimeForm = (props) => {
         autoComplete="off"
     >
         <Form.Item
-            onChange={(e) => {
-                setTimeForm({...timeForm, name: e.target.value})
-            }}
             label="Username"
-            name="username"
+            name="name"
             rules={[
                 {
                     required: true,
@@ -67,14 +54,11 @@ const TimeForm = (props) => {
         </Form.Item>
         <Form.Item
 
-            name="gender"
+            name="subject"
             label="Gender"
             rules={[{required: true}]}
         >
             <Select
-                onChange={(e) => {
-                    setTimeForm({...timeForm, subject: e})
-                }}
                 placeholder="Select a option and change input text above"
                 allowClear
             >
@@ -85,13 +69,10 @@ const TimeForm = (props) => {
         </Form.Item>
         <Form.Item
 
-            name="time-picker"
+            name="time"
             label="TimePicker" {...config}
         >
             <TimePicker
-                onChange={(e) => {
-                    setTimeForm({...timeForm, time: e.format('HH:mm:ss')})
-                }}
             />
         </Form.Item>
         <Form.Item
@@ -100,7 +81,7 @@ const TimeForm = (props) => {
                 span: 16,
             }}
         >
-            <Button onClick={ArrayTimeForm} type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit">
                 Submit
             </Button>
         </Form.Item>
