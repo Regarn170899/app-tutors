@@ -32,13 +32,14 @@ const TimeForm = (props) => {
         }
         props.setTimeFormResult([...props.timeFormResult, timeFormat])
         form.resetFields();
+        console.log(props.timeFormResult)
     };
     return (
         <>
             <Button type="primary" onClick={showModal}>
                 Запись
             </Button>
-            <Modal title="Запись" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Запись" open={isModalOpen} onCancel={handleCancel} footer={null}>
                 <Form
                     form={form}
                     name="basic"
@@ -99,7 +100,7 @@ const TimeForm = (props) => {
                             span: 16,
                         }}
                     >
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" onClick={handleOk}>
                             Сохранить
                         </Button>
                     </Form.Item></p>
