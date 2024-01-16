@@ -30,7 +30,6 @@ const TimeForm = (props) => {
         props.setTimeFormResult([...props.timeFormResult, timeFormat])
         form.resetFields();
         setIsModalOpen(false);
-        console.log(props.timeFormResult)
     };
     return (
         <>
