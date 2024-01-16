@@ -18,9 +18,6 @@ const TimeForm = (props) => {
     const showModal = () => {
         setIsModalOpen(true);
     };
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -32,6 +29,7 @@ const TimeForm = (props) => {
         }
         props.setTimeFormResult([...props.timeFormResult, timeFormat])
         form.resetFields();
+        setIsModalOpen(false);
         console.log(props.timeFormResult)
     };
     return (
@@ -56,7 +54,7 @@ const TimeForm = (props) => {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                    <p><Form.Item
+                    <Form.Item
                         label="Имя"
                         name="name"
                         rules={[
@@ -67,8 +65,8 @@ const TimeForm = (props) => {
                         ]}
                     >
                         <Input/>
-                    </Form.Item></p>
-                    <p><Form.Item
+                    </Form.Item>
+                    <Form.Item
 
                         name="subject"
                         label="Предмет"
@@ -86,24 +84,24 @@ const TimeForm = (props) => {
                             <Option value="Math">Математика</Option>
                             <Option value="English">Английский язык</Option>
                         </Select>
-                    </Form.Item></p>
-                    <p><Form.Item
+                    </Form.Item>
+                    <Form.Item
 
                         name="time"
                         label="Время" {...config}
                     >
                         <TimePicker/>
-                    </Form.Item></p>
-                    <p><Form.Item
+                    </Form.Item>
+                    <Form.Item
                         wrapperCol={{
                             offset: 8,
                             span: 16,
                         }}
                     >
-                        <Button type="primary" htmlType="submit" onClick={handleOk}>
+                        <Button type="primary" htmlType="submit">
                             Сохранить
                         </Button>
-                    </Form.Item></p>
+                    </Form.Item>
                 </Form>
             </Modal>
         </>
