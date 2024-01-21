@@ -1,5 +1,4 @@
 import {Button, Form, Input, Modal, Select, TimePicker} from 'antd';
-import {useState} from "react";
 const { Option } = Select;
 const config = {
     rules: [
@@ -14,29 +13,32 @@ const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
 };
 const TimeForm = (props) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
+
     const handleCancel = () => {
-        setIsModalOpen(false);
+        props.setIsModalOpen(false);
     };
+    const createCorrectFormDataArray=(timeFormat)=>{// Корректирует массив данных для даты
+        if(props.currentDate in props.timeFormResult){
+            return [...props.timeFormResult?.[props.currentDate],timeFormat]
+        }else{
+            return [timeFormat]
+        }
+    }
     const [form] = Form.useForm();
     const onFinish = (values) => {
         const timeFormat = {
             ...values,
             time : values.time.format('HH:mm:ss'),
         }
-        props.setTimeFormResult([...props.timeFormResult, timeFormat])
+        props.setTimeFormResult({...props.timeFormResult,
+            [props.currentDate]: createCorrectFormDataArray(timeFormat),//ключ это дата , а значение это массив из записей(запись - объект)
+        })
         form.resetFields();
-        setIsModalOpen(false);
+        props.setIsModalOpen(false);
     };
     return (
         <>
-            <Button type="primary" onClick={showModal}>
-                Запись
-            </Button>
-            <Modal title="Запись" open={isModalOpen} onCancel={handleCancel} footer={null}>
+            <Modal title="Запись" open={props.isModalOpen} onCancel={handleCancel} footer={null}>
                 <Form
                     form={form}
                     name="basic"

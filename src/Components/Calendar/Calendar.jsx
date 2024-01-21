@@ -1,32 +1,24 @@
-import React, {useState} from 'react';
-import { Badge, Calendar } from 'antd';
-import dayjs from 'dayjs';
-const getListData = (value,arr) => {
-    let listData
-   if(arr.includes(value.format('YYYY-MM-DD'))) {
-       listData = [
-           {
-               type: 'warning',
-               content: 'This is warning event.',
-           },
-           {
-               type: 'success',
-               content: 'This is usual event.',
-           },
-       ];
-   }else{
-       listData=[];
-   }
-   return listData
+import React from 'react';
+import { Calendar } from 'antd';
 
-};
 const getMonthData = (value) => {
     if (value.month() === 8) {
         return 1394;
     }
 };
-const CalendarCustom = () => {
-    const [arr,setArr]=useState([])
+const CalendarCustom = (props) => {
+    const getListData = (value) => {
+        let listData=[]
+        Object.keys(props.timeFormResult).map((item)=>{
+            if(value.format('YYYY-MM-DD')===item){
+                props.timeFormResult[item].map((currentLesson)=>{
+                    listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time} `})
+                })
+            }
+        })
+        return listData
+
+    };
     const monthCellRender = (value) => {
         const num = getMonthData(value);
         return num ? (
@@ -37,29 +29,23 @@ const CalendarCustom = () => {
         ) : null;
     };
     const SelectDate=(current)=>{
-        if(!arr.includes(current.format('YYYY-MM-DD'))){
-            setArr([...arr,current.format('YYYY-MM-DD')])
-            console.log(arr);
-        }
+        props.setIsModalOpen(true)
+        props.setCurrentDate(current.format('YYYY-MM-DD'))//берём выбранную дату
+    }
 
-    }
-    const deleteSelectedDate=(valueDate)=>{
-        const newArr=arr.filter((item)=>item!==valueDate.format('YYYY-MM-DD'))
-        setArr(newArr)
-    }
     const dateCellRender = (value) => {
-        const listData = getListData(value,arr);
+        const listData = getListData(value);
         return (
             <div>
-                <ul className="events">
+                <ul style={{paddingLeft:0}}>
                     {listData.map((item) => (
                         <div>
-                            <li key={item.content}>
-                                <Badge status={item.type} text={item.content} />
+                            <li key={item.content} style={{display:"flex",flexWrap:"nowrap",paddingLeft:0}}>
+
+                                <p>{item.content}</p>
                             </li>
                         </div>
                     ))}
-                    {arr.includes(value.format('YYYY-MM-DD'))&&<button onClick={() => deleteSelectedDate(value)}>Удалить</button>}
                 </ul>
 
             </div>

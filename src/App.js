@@ -4,11 +4,14 @@ import TimeForm from "./Components/TimeForm/TimeForm";
 import {useState} from "react";
 
 function App() {
-    const [timeFormResult, setTimeFormResult] = useState([])
+    const [timeFormResult, setTimeFormResult] = useState({})
+    const [currentDate, setCurrentDate] = useState('')
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="App">
-      <TimeForm timeFormResult={timeFormResult} setTimeFormResult={setTimeFormResult}/>
-      <Calendar/>
+      <TimeForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} currentDate={currentDate} timeFormResult={timeFormResult} setTimeFormResult={setTimeFormResult}/>
+      <Calendar timeFormResult={timeFormResult} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} setCurrentDate={setCurrentDate}/>
     </div>
   );
 }
