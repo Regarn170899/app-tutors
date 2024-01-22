@@ -1,5 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Calendar } from 'antd';
+import styles from './Calendar.module.css'
+import {CheckCircleOutlined, DeleteOutlined} from "@ant-design/icons";
+import cx from "classnames";
 
 const getMonthData = (value) => {
     if (value.month() === 8) {
@@ -7,18 +10,26 @@ const getMonthData = (value) => {
     }
 };
 const CalendarCustom = (props) => {
+    const [arrayLessonIds,setArrayLessonIds]=useState([])
     const getListData = (value) => {
         let listData=[]
-        Object.keys(props.timeFormResult).map((item)=>{
-            if(value.format('YYYY-MM-DD')===item){
+        Object.keys(props.timeFormResult).map((item)=>{//Создаю массив ключей нашего объекта
+            if(value.format('YYYY-MM-DD')===item){//Если выбранная дата соответсвует ключу объекта то добавляю в эту дату информацию о нашем занятии
                 props.timeFormResult[item].map((currentLesson)=>{
-                    listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time} `})
+                    listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time} `,id:currentLesson.id})
                 })
             }
         })
         return listData
 
     };
+    useEffect(()=>{
+        const arrayIds =[]
+        props.successfulLessons.map((lesson)=>{
+            arrayIds.push(lesson.id)
+        })
+        setArrayLessonIds(arrayIds)
+    },[props.successfulLessons]) // как только изменяетя массив successfulLessons то мы сразу добавляем id в новое состояние
     const monthCellRender = (value) => {
         const num = getMonthData(value);
         return num ? (
@@ -28,9 +39,23 @@ const CalendarCustom = (props) => {
             </div>
         ) : null;
     };
+    const setNewSuccessfulLesson=(item)=>{
+        const arrayIds =[]
+            props.successfulLessons.map((lesson)=>{
+                arrayIds.push(lesson.id)
+            })
+
+        if(!arrayIds.includes(item.id)){// Если в массиве нету записи с таким id о добавляем её
+            props.setSuccessfulLessons([...props.successfulLessons , item])
+        }
+    }
     const SelectDate=(current)=>{
         props.setIsModalOpen(true)
         props.setCurrentDate(current.format('YYYY-MM-DD'))//берём выбранную дату
+    }
+    const deleteCurrentLessen=(value,id)=>{
+        props.setTimeFormResult({...props.timeFormResult,
+            [value.format('YYYY-MM-DD')]:props.timeFormResult[value.format('YYYY-MM-DD')].filter((item)=>item.id!==id)})//Фильтруем массив с записями в конкретной дате
     }
 
     const dateCellRender = (value) => {
@@ -39,10 +64,17 @@ const CalendarCustom = (props) => {
             <div>
                 <ul style={{paddingLeft:0}}>
                     {listData.map((item) => (
-                        <div>
-                            <li key={item.content} style={{display:"flex",flexWrap:"nowrap",paddingLeft:0}}>
-
+                        <div key={item.id}>
+                            <li className={cx(styles.itemDate, { [styles.itemDateActive]: arrayLessonIds.includes(item.id) })}>
                                 <p>{item.content}</p>
+                                <div onClick={(e)=> {
+                                    deleteCurrentLessen(value, item.id)
+                                    e.stopPropagation()//предотвращем всплытие
+                                }}><DeleteOutlined title={'Удалить занятие'} style={{ fontSize: '20px',paddingLeft:'10px' }}/></div>
+                                <div  onClick={(e)=> {
+                                    setNewSuccessfulLesson(item)
+                                    e.stopPropagation()//предотвращем всплытие
+                                }}><CheckCircleOutlined  title={'Занятие проведено'} style={{ fontSize: '20px',paddingLeft:'10px',color:"green" }}/></div>
                             </li>
                         </div>
                     ))}
@@ -59,4 +91,5 @@ const CalendarCustom = (props) => {
     };
     return <Calendar cellRender={cellRender} onSelect={SelectDate}/>;
 };
+
 export default CalendarCustom;
