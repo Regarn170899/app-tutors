@@ -1,4 +1,5 @@
 import {Button, Form, Input, Modal, Select, TimePicker} from 'antd';
+import {v4 as uuidv4} from 'uuid';
 const { Option } = Select;
 const config = {
     rules: [
@@ -29,6 +30,7 @@ const TimeForm = (props) => {
         const timeFormat = {
             ...values,
             time : values.time.format('HH:mm:ss'),
+            id:uuidv4() // обавляем уникальный id для каждой записи
         }
         props.setTimeFormResult({...props.timeFormResult,
             [props.currentDate]: createCorrectFormDataArray(timeFormat),//ключ это дата , а значение это массив из записей(запись - объект)
