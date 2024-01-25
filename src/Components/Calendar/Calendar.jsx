@@ -16,7 +16,8 @@ const CalendarCustom = (props) => {
         Object.keys(props.timeFormResult).map((item)=>{//Создаю массив ключей нашего объекта
             if(value.format('YYYY-MM-DD')===item){//Если выбранная дата соответсвует ключу объекта то добавляю в эту дату информацию о нашем занятии
                 props.timeFormResult[item].map((currentLesson)=>{
-                    listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time} `,id:currentLesson.id})
+                    listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time} `,id:currentLesson.id,
+                        time:currentLesson.time,name:currentLesson.name,subject:currentLesson.subject})
                 })
             }
         })
@@ -56,6 +57,9 @@ const CalendarCustom = (props) => {
     const deleteCurrentLessen=(value,id)=>{
         props.setTimeFormResult({...props.timeFormResult,
             [value.format('YYYY-MM-DD')]:props.timeFormResult[value.format('YYYY-MM-DD')].filter((item)=>item.id!==id)})//Фильтруем массив с записями в конкретной дате
+        if(props.successfulLessons.length!==0){
+            props.setSuccessfulLessons(props.successfulLessons.filter((item)=>item.id!==id))
+        }
     }
 
     const dateCellRender = (value) => {
