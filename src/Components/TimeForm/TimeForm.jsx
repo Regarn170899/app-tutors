@@ -1,4 +1,4 @@
-import {Button, Form, Input, Modal, Select, TimePicker} from 'antd';
+import {Button, Form, Input, InputNumber, Modal, Select, TimePicker} from 'antd';
 import {v4 as uuidv4} from 'uuid';
 const { Option } = Select;
 const config = {
@@ -14,6 +14,18 @@ const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
 };
 const TimeForm = (props) => {
+    const selectAfter = (
+        <Select
+            defaultValue="RUB"
+            style={{
+                width: 60,
+            }}
+        >
+            <Option value="RUB">₽</Option>
+            <Option value="USD">$</Option>
+            <Option value="EUR">€</Option>
+        </Select>
+    );
 
     const handleCancel = () => {
         props.setIsModalOpen(false);
@@ -30,7 +42,7 @@ const TimeForm = (props) => {
         const timeFormat = {
             ...values,
             time : values.time.format('HH:mm:ss'),
-            id:uuidv4() // обавляем уникальный id для каждой записи
+            id:uuidv4() // добавляем уникальный id для каждой записи
         }
         props.setTimeFormResult({...props.timeFormResult,
             [props.currentDate]: createCorrectFormDataArray(timeFormat),//ключ это дата , а значение это массив из записей(запись - объект)
@@ -94,6 +106,12 @@ const TimeForm = (props) => {
                         label="Время" {...config}
                     >
                         <TimePicker/>
+                    </Form.Item>
+                    <Form.Item
+                        name="money"
+                        label="Сумма"
+                    >
+                        <InputNumber type='number' addonAfter={selectAfter} defaultValue={''} />
                     </Form.Item>
                     <Form.Item
                         wrapperCol={{
