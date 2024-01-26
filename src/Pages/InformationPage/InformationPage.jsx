@@ -79,6 +79,7 @@ const InformationPage = (props) => {
                 name: lesson.name,
                 subject: lesson.subject,
                 time: lesson.time,
+                money: lesson.money,
             }
     })
 
@@ -100,6 +101,12 @@ const InformationPage = (props) => {
             dataIndex: 'time',
             key: 'time',
             ...getColumnSearchProps('time'),
+        },
+        {
+            title: 'Сумма',
+            dataIndex: 'money',
+            key: 'money',
+            ...getColumnSearchProps('money'),
         },
     ];
 

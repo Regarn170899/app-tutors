@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useState} from 'react';
 import {Calendar} from 'antd';
 import styles from './Calendar.module.css'
 import {CheckCircleOutlined, DeleteOutlined} from "@ant-design/icons";
@@ -14,14 +14,13 @@ const CalendarCustom = (props) => {
     const [arrayLessonIds,setArrayLessonIds]=useState([])
 
     const getListData = (value) => {
-        console.log('sda')
 
         let listData=[]
         Object.keys(props.timeFormResult).map((item)=>{//Создаю массив ключей нашего объекта
             if(value.format('YYYY-MM-DD')===item){//Если выбранная дата соответсвует ключу объекта то добавляю в эту дату информацию о нашем занятии
                 props.timeFormResult[item].map((currentLesson)=>{
-                    listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time} `,id:currentLesson.id,
-                        time:currentLesson.time,name:currentLesson.name,subject:currentLesson.subject})
+                    listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time}, сумма ${currentLesson.money} `,id:currentLesson.id,
+                        time:currentLesson.time,name:currentLesson.name,subject:currentLesson.subject, money:currentLesson.money})
                 })
             }
         })
