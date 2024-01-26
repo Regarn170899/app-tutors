@@ -1,5 +1,5 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
-import { Calendar } from 'antd';
+import React, { useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {Calendar} from 'antd';
 import styles from './Calendar.module.css'
 import {CheckCircleOutlined, DeleteOutlined} from "@ant-design/icons";
 import cx from "classnames";
@@ -12,6 +12,7 @@ const getMonthData = (value) => {
 };
 const CalendarCustom = (props) => {
     const [arrayLessonIds,setArrayLessonIds]=useState([])
+
     const getListData = (value) => {
         console.log('sda')
 

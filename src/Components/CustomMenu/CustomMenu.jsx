@@ -31,9 +31,6 @@ const CustomMenu = () => {
     return (
         <div>
             <div
-                style={{
-                    width: 256,
-                }}
             >
                 <div style={{
                     width: 80,
