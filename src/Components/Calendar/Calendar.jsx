@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import { Calendar } from 'antd';
 import styles from './Calendar.module.css'
 import {CheckCircleOutlined, DeleteOutlined} from "@ant-design/icons";
 import cx from "classnames";
 
 const getMonthData = (value) => {
+
     if (value.month() === 8) {
         return 1394;
     }
@@ -12,6 +13,8 @@ const getMonthData = (value) => {
 const CalendarCustom = (props) => {
     const [arrayLessonIds,setArrayLessonIds]=useState([])
     const getListData = (value) => {
+        console.log('sda')
+
         let listData=[]
         Object.keys(props.timeFormResult).map((item)=>{//Создаю массив ключей нашего объекта
             if(value.format('YYYY-MM-DD')===item){//Если выбранная дата соответсвует ключу объекта то добавляю в эту дату информацию о нашем занятии
@@ -31,7 +34,8 @@ const CalendarCustom = (props) => {
         })
         setArrayLessonIds(arrayIds)
     },[props.successfulLessons]) // как только изменяетя массив successfulLessons то мы сразу добавляем id в новое состояние
-    const monthCellRender = (value) => {
+    const monthCellRender =  (value) => {
+
         const num = getMonthData(value);
         return num ? (
             <div className="notes-month">
@@ -55,6 +59,7 @@ const CalendarCustom = (props) => {
         props.setCurrentDate(current.format('YYYY-MM-DD'))//берём выбранную дату
     }
     const deleteCurrentLessen=(value,id)=>{
+
         props.setTimeFormResult({...props.timeFormResult,
             [value.format('YYYY-MM-DD')]:props.timeFormResult[value.format('YYYY-MM-DD')].filter((item)=>item.id!==id)})//Фильтруем массив с записями в конкретной дате
         if(props.successfulLessons.length!==0){
@@ -62,8 +67,9 @@ const CalendarCustom = (props) => {
         }
     }
 
-    const dateCellRender = (value) => {
-        const listData = getListData(value);
+    const dateCellRender = useCallback( (value) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const listData = useMemo(()=>getListData(value),[props.timeFormResult]) ;
         return (
             <div>
                 <ul style={{paddingLeft:0}}>
@@ -87,9 +93,9 @@ const CalendarCustom = (props) => {
             </div>
 
         );
-    };
+    },[props,arrayLessonIds]);
     const cellRender = (current, info) => {
-        if (info.type === 'date') return dateCellRender(current);
+        if (info.type === 'date') return dateCellRender(current) ;
         if (info.type === 'month') return monthCellRender(current);
         return info.originNode;
     };

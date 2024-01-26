@@ -3,7 +3,6 @@ import {Table} from "antd";
 
 const InformationPage = (props) => {
     const dataSource = props.successfulLessons.map((lesson)=>{
-        debugger;
         return{
                 key: "1",
                 name: lesson.name,
