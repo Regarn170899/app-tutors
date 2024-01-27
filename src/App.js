@@ -6,6 +6,21 @@ import {Route, Router, Routes} from "react-router-dom";
 import CustomMenu from "./Components/CustomMenu/CustomMenu";
 import InformationPage from "./Pages/InformationPage/InformationPage";
 
+const initialObject={
+    '01':[],
+    '02':[],
+    '03':[],
+    '04':[],
+    '05':[],
+    '06':[],
+    '07':[],
+    '08':[],
+    '09':[],
+    '10':[],
+    '11':[],
+    '12':[],
+
+}
 function App() {
     const [timeFormResult, setTimeFormResult] = useState({})
     const [currentDate, setCurrentDate] = useState('')

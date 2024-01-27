@@ -20,7 +20,7 @@ const CalendarCustom = (props) => {
             if(value.format('YYYY-MM-DD')===item){//Если выбранная дата соответсвует ключу объекта то добавляю в эту дату информацию о нашем занятии
                 props.timeFormResult[item].map((currentLesson)=>{
                     listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time}, сумма ${currentLesson.money} `,id:currentLesson.id,
-                        time:currentLesson.time,name:currentLesson.name,subject:currentLesson.subject, money:currentLesson.money})
+                        time:currentLesson.time,name:currentLesson.name,subject:currentLesson.subject, money:currentLesson.money,date:value})
                 })
             }
         })
@@ -67,7 +67,7 @@ const CalendarCustom = (props) => {
         }
     }
 
-    const dateCellRender = useCallback( (value) => {
+    const dateCellRender = (value) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const listData = useMemo(()=>getListData(value),[props.timeFormResult]) ;
         return (
@@ -93,7 +93,7 @@ const CalendarCustom = (props) => {
             </div>
 
         );
-    },[props,arrayLessonIds]);
+    }
     const cellRender = (current, info) => {
         if (info.type === 'date') return dateCellRender(current) ;
         if (info.type === 'month') return monthCellRender(current);
