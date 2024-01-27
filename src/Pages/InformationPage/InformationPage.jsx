@@ -1,11 +1,44 @@
-import React, {useRef, useState} from 'react';
-import {Button, Input, Space, Table} from "antd";
+import React, {useEffect, useRef, useState} from 'react';
+import {Button, Col, Input, Row, Space, Statistic, Table} from "antd";
 import {SearchOutlined} from "@ant-design/icons";
+import * as PropTypes from "prop-types";
 
+function CountUp(props) {
+    return null;
+}
+
+CountUp.propTypes = {separator: PropTypes.string};
 const InformationPage = (props) => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
+
+    const [monthMoney, setMonthMoney] = useState({});
+    const getMoney=()=>{
+        const initialObject={
+            '01':0,
+            '02':0,
+            '03':0,
+            '04':0,
+            '05':0,
+            '06':0,
+            '07':0,
+            '08':0,
+            '09':0,
+            '10':0,
+            '11':0,
+            '12':0,
+        }
+        props.successfulLessons.map((lesson)=>{
+            initialObject[lesson.date.format('MM')]+=lesson.money
+        })
+
+        setMonthMoney({...initialObject})
+    }
+    useEffect(()=>{
+        getMoney()
+    },[props.successfulLessons])
+    console.log(monthMoney);
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -73,6 +106,8 @@ const InformationPage = (props) => {
                 text
             ),
     });
+
+
     const dataSource = props.successfulLessons.map((lesson)=>{
         return{
                 key: "1",
@@ -82,6 +117,8 @@ const InformationPage = (props) => {
                 money: lesson.money,
             }
     })
+
+
 
     const columns = [
         {
@@ -110,11 +147,25 @@ const InformationPage = (props) => {
         },
     ];
 
+    const formatter = (value) => <CountUp end={value} separator="," />;
 
     return (
         <div style={{width:'100%', paddingTop:'40px'}}>
             <h2>Проведённые занятия</h2>
             <Table   dataSource={dataSource} columns={columns} />
+
+            <Row >
+                {Object.keys(monthMoney).map((item)=>{
+                    if(monthMoney[item]!==0){
+                        return(
+                            <Col span={10}>
+                                <Statistic title={`Заработок за ${item} месяц`} value={monthMoney[item]}  />
+                            </Col>
+                        )
+                    }
+                })}
+
+            </Row>
         </div>
     );
 };
