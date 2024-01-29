@@ -1,7 +1,6 @@
 .itemDate{
     margin: 5px;
     padding: 0;
-    display: flex;
     flex-wrap: nowrap;
     border: 2px solid cornflowerblue;
     border-radius: 10px;

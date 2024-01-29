@@ -13,6 +13,7 @@ const config = {
 const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
 };
+const format = 'HH:mm';
 const TimeForm = (props) => {
     const selectAfter = (
         <Select
@@ -46,7 +47,7 @@ const TimeForm = (props) => {
         }
         const timeFormat = {
             ...values,
-            time : values.time.format('HH:mm:ss'),
+            time : values.time.format('HH:mm'),
             id:uuidv4() // добавляем уникальный id для каждой записи
         }
         if((localStorageLessens.hasOwnProperty(props.currentDate))){
@@ -110,9 +111,8 @@ const TimeForm = (props) => {
                             placeholder="Выберите предмет"
                             allowClear
                         >
-                            <Option value="Russian">Русский язык</Option>
-                            <Option value="Math">Математика</Option>
-                            <Option value="English">Английский язык</Option>
+                            <Option value="Английский язык">Английский язык</Option>
+                            <Option value="Итальянский язык">Итальянский язык</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item
@@ -120,7 +120,7 @@ const TimeForm = (props) => {
                         name="time"
                         label="Время" {...config}
                     >
-                        <TimePicker/>
+                        <TimePicker  format={format}/>
                     </Form.Item>
                     <Form.Item
                         name="money"
