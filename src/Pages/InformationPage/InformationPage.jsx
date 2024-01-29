@@ -148,7 +148,6 @@ const InformationPage = (props) => {
         },
     ];
 
-    const formatter = (value) => <CountUp end={value} separator="," />;
 
     return (
         <div style={{width:'100%', paddingTop:'40px'}}>

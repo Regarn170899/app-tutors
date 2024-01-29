@@ -2,7 +2,7 @@ import './App.css';
 import Calendar from "./Components/Calendar/Calendar";
 import TimeForm from "./Components/TimeForm/TimeForm";
 import {useState} from "react";
-import {Navigate, Route, Router, Routes} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import CustomMenu from "./Components/CustomMenu/CustomMenu";
 import InformationPage from "./Pages/InformationPage/InformationPage";
 
@@ -11,8 +11,8 @@ function App() {
     const [currentDate, setCurrentDate] = useState('')
     const [successfulLessons, setSuccessfulLessons] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-  return (
+    console.log(timeFormResult);
+    return (
     <div className="App">
         <div className={'App-header-container'} ></div>
         <div className={'App-header-block'}>
@@ -26,6 +26,7 @@ function App() {
                                   currentDate={currentDate}
                                   timeFormResult={timeFormResult}
                                   setTimeFormResult={setTimeFormResult}/>
+
                         <Calendar setSuccessfulLessons={setSuccessfulLessons}
                                   successfulLessons={successfulLessons}
                                   setTimeFormResult={setTimeFormResult}

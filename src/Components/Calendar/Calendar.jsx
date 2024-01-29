@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState} from 'react';
-import {Calendar} from 'antd';
+import React, {  useEffect, useMemo, useState} from 'react';
+import {Calendar, DatePicker, Modal} from 'antd';
 import styles from './Calendar.module.css'
-import {CheckCircleOutlined, DeleteOutlined} from "@ant-design/icons";
+import {CheckCircleOutlined, DeleteOutlined, RetweetOutlined} from "@ant-design/icons";
 import cx from "classnames";
+import moment from "moment/moment";
 
 const getMonthData = (value) => {
 
@@ -12,6 +13,14 @@ const getMonthData = (value) => {
 };
 const CalendarCustom = (props) => {
     const [arrayLessonIds,setArrayLessonIds]=useState([])
+    const [newDate,setNewDate]=useState('')
+
+    useEffect(()=>{
+        window.addEventListener('storage', () => {
+            console.log("Change to local storage!");
+        })
+    })
+
 
     const getListData = (value) => {
         let localStorageLessens =JSON.parse(localStorage.getItem('lessens'))
@@ -40,7 +49,6 @@ const CalendarCustom = (props) => {
         setArrayLessonIds(arrayIds)
     },[props.successfulLessons]) // как только изменяетя массив successfulLessons то мы сразу добавляем id в новое состояние
     const monthCellRender =  (value) => {
-
         const num = getMonthData(value);
         return num ? (
             <div className="notes-month">
@@ -72,37 +80,80 @@ const CalendarCustom = (props) => {
     }
     const deleteCurrentLessen=(value,id)=>{
         const localStorageLessens =JSON.parse(localStorage.getItem('lessens'))
-        let localStorageSuccessfulLessens =JSON.parse(localStorage.getItem('successfulLessons'))
-        const deleteLocalStorageLessensItem=localStorageLessens[value.format('YYYY-MM-DD')].filter((item)=>item.id!==id)
+        let localStorageSuccessfulLessens =(JSON.parse(localStorage.getItem('successfulLessons'))||[])
+        const correctDate=(value.format('YYYY-MM-DD'))||moment(new Date(value)).format("MM")
+        const deleteLocalStorageLessensItem=localStorageLessens[correctDate].filter((item)=>item.id!==id)
         localStorage.setItem("lessens", JSON.stringify(
-            {...localStorageLessens,[value.format('YYYY-MM-DD')]:deleteLocalStorageLessensItem}));
+            {...localStorageLessens,[correctDate]:deleteLocalStorageLessensItem}));
+
         props.setTimeFormResult({...props.timeFormResult,
-            [value.format('YYYY-MM-DD')]:props.timeFormResult[value.format('YYYY-MM-DD')].filter((item)=>item.id!==id)})//Фильтруем массив с записями в конкретной дате
+            [correctDate]:localStorageLessens[correctDate].filter((item)=>item.id!==id)})//Фильтруем массив с записями в конкретной дате
+
         if(props.successfulLessons.length!==0){
             props.setSuccessfulLessons(props.successfulLessons.filter((item)=>item.id!==id))
         }
+
         localStorage.setItem("successfulLessons", JSON.stringify(
             localStorageSuccessfulLessens.filter((item)=>item.id!==id)));
     }
+    const createCorrectFormDataArray=(timeFormat)=>{// Корректирует массив данных для даты
+        if(newDate in props.timeFormResult){
+            return [...props.timeFormResult?.[newDate],timeFormat]
+        }else{
+            return [timeFormat]
+        }
+    }
+
+    const rescheduleLesson= (item,id,value)=>{//Функция переноса даты занятия
+        if(newDate!==''){
+            let localStorageLessens =JSON.parse(localStorage.getItem('lessens'))
+            props.setTimeFormResult({...localStorageLessens,
+                [newDate]: createCorrectFormDataArray(item),
+            })
+            if(localStorageLessens.hasOwnProperty(newDate)){
+                const test23 =localStorageLessens[newDate]
+                test23.push(item)
+                localStorage.setItem("lessens", JSON.stringify(
+                    {...localStorageLessens,[newDate]:[...test23]}));
+            }else{
+                localStorage.setItem("lessens", JSON.stringify({...localStorageLessens,[newDate]:[item]}));
+            }deleteCurrentLessen(value,id)
+        }
+    }
+    const onChange = (date, dateString) => {
+        setNewDate(dateString)
+    };
 
     const dateCellRender = (value) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const listData = useMemo(()=>getListData(value),[props.timeFormResult]) ;
         return (
-            <div>
-                <ul style={{paddingLeft:0}}>
+            <div >
+                <ul  onClick={(e)=>e.stopPropagation()} style={{paddingLeft:0}}>
                     {listData.map((item) => (
-                        <div key={item.id}>
+                        <div  key={item.id}>
                             <li className={cx(styles.itemDate, { [styles.itemDateActive]: arrayLessonIds.includes(item.id) })}>
                                 <p>{item.content}</p>
-                                <div onClick={(e)=> {
-                                    deleteCurrentLessen(value, item.id)
-                                    e.stopPropagation()//предотвращем всплытие
-                                }}><DeleteOutlined title={'Удалить занятие'} style={{ fontSize: '20px',paddingLeft:'10px' }}/></div>
-                                <div  onClick={(e)=> {
-                                    setNewSuccessfulLesson(item)
-                                    e.stopPropagation()//предотвращем всплытие
-                                }}><CheckCircleOutlined  title={'Занятие проведено'} style={{ fontSize: '20px',paddingLeft:'10px',color:"green" }}/></div>
+                                <div>
+                                    <div style={{display:"flex"}}>
+                                        <div onClick={(e)=> {
+                                            deleteCurrentLessen(value, item.id)
+                                            e.stopPropagation()//предотвращем всплытие
+                                        }}><DeleteOutlined title={'Удалить занятие'} style={{ fontSize: '20px',paddingLeft:'10px' }}/>
+                                        </div>
+                                        <div  onClick={(e)=> {
+                                            setNewSuccessfulLesson(item)
+                                            e.stopPropagation()//предотвращем всплытие
+                                        }}><CheckCircleOutlined  title={'Занятие проведено'} style={{ fontSize: '20px',paddingLeft:'10px',color:"green" }}/>
+                                        </div>
+                                    </div>
+                                    <div style={{display:"flex",alignItems:'center'}} >
+                                        <DatePicker placeholder={'Дата переноса'}  onChange={onChange} />
+                                        <div onClick={()=>rescheduleLesson(item,item.id,value,)}><RetweetOutlined
+                                            style={{ fontSize: '20px',paddingLeft:'10px',color:"orange" }} /></div>
+                                    </div>
+                                </div>
+
                             </li>
                         </div>
                     ))}
