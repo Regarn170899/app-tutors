@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Button, Col, Input, Row, Space, Statistic, Table} from "antd";
 import {SearchOutlined} from "@ant-design/icons";
 import * as PropTypes from "prop-types";
+import moment from "moment";
 
 function CountUp(props) {
     return null;
@@ -15,6 +16,7 @@ const InformationPage = (props) => {
 
     const [monthMoney, setMonthMoney] = useState({});
     const getMoney=()=>{
+        let localStorageSuccessfulLessens =JSON.parse(localStorage.getItem('successfulLessons'))
         const initialObject={
             '01':0,
             '02':0,
@@ -29,8 +31,8 @@ const InformationPage = (props) => {
             '11':0,
             '12':0,
         }
-        props.successfulLessons.map((lesson)=>{
-            initialObject[lesson.date.format('MM')]+=lesson.money
+        localStorageSuccessfulLessens.map((lesson)=>{
+            initialObject[moment(new Date(lesson.date)).format("MM")]+=lesson.money
         })
 
         setMonthMoney({...initialObject})
@@ -38,7 +40,6 @@ const InformationPage = (props) => {
     useEffect(()=>{
         getMoney()
     },[props.successfulLessons])
-    console.log(monthMoney);
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -107,8 +108,8 @@ const InformationPage = (props) => {
             ),
     });
 
-
-    const dataSource = props.successfulLessons.map((lesson)=>{
+    let localStorageSuccessfulLessens =JSON.parse(localStorage.getItem('successfulLessons'))
+    const dataSource = localStorageSuccessfulLessens.map((lesson)=>{
         return{
                 key: "1",
                 name: lesson.name,
@@ -153,7 +154,6 @@ const InformationPage = (props) => {
         <div style={{width:'100%', paddingTop:'40px'}}>
             <h2>Проведённые занятия</h2>
             <Table   dataSource={dataSource} columns={columns} />
-
             <Row >
                 {Object.keys(monthMoney).map((item)=>{
                     if(monthMoney[item]!==0){

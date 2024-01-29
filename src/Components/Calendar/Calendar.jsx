@@ -14,11 +14,15 @@ const CalendarCustom = (props) => {
     const [arrayLessonIds,setArrayLessonIds]=useState([])
 
     const getListData = (value) => {
-
+        let localStorageLessens =JSON.parse(localStorage.getItem('lessens'))
+        if(localStorageLessens===null){
+            localStorage.setItem("successfulLessons", JSON.stringify([]));
+            localStorageLessens=[]
+        }
         let listData=[]
-        Object.keys(props.timeFormResult).map((item)=>{//Создаю массив ключей нашего объекта
+        Object.keys(localStorageLessens).map((item)=>{//Создаю массив ключей нашего объекта
             if(value.format('YYYY-MM-DD')===item){//Если выбранная дата соответсвует ключу объекта то добавляю в эту дату информацию о нашем занятии
-                props.timeFormResult[item].map((currentLesson)=>{
+                localStorageLessens[item].map((currentLesson)=>{
                     listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time}, сумма ${currentLesson.money} `,id:currentLesson.id,
                         time:currentLesson.time,name:currentLesson.name,subject:currentLesson.subject, money:currentLesson.money,date:value})
                 })
@@ -28,8 +32,9 @@ const CalendarCustom = (props) => {
 
     };
     useEffect(()=>{
+        let localStorageLessens =JSON.parse(localStorage.getItem('successfulLessons'))
         const arrayIds =[]
-        props.successfulLessons.map((lesson)=>{
+        localStorageLessens.map((lesson)=>{
             arrayIds.push(lesson.id)
         })
         setArrayLessonIds(arrayIds)
@@ -45,13 +50,20 @@ const CalendarCustom = (props) => {
         ) : null;
     };
     const setNewSuccessfulLesson=(item)=>{
+        let localStorageLessens =JSON.parse(localStorage.getItem('successfulLessons'))
+        if(localStorageLessens===null){
+            localStorage.setItem("successfulLessons", JSON.stringify([]));
+            localStorageLessens=[]
+        }
         const arrayIds =[]
-            props.successfulLessons.map((lesson)=>{
+        localStorageLessens?.map((lesson)=>{
                 arrayIds.push(lesson.id)
             })
 
         if(!arrayIds.includes(item.id)){// Если в массиве нету записи с таким id о добавляем её
             props.setSuccessfulLessons([...props.successfulLessons , item])
+            localStorage.setItem("successfulLessons", JSON.stringify(
+                [...localStorageLessens,item]));
         }
     }
     const SelectDate=(current)=>{
@@ -59,12 +71,18 @@ const CalendarCustom = (props) => {
         props.setCurrentDate(current.format('YYYY-MM-DD'))//берём выбранную дату
     }
     const deleteCurrentLessen=(value,id)=>{
-
+        const localStorageLessens =JSON.parse(localStorage.getItem('lessens'))
+        let localStorageSuccessfulLessens =JSON.parse(localStorage.getItem('successfulLessons'))
+        const deleteLocalStorageLessensItem=localStorageLessens[value.format('YYYY-MM-DD')].filter((item)=>item.id!==id)
+        localStorage.setItem("lessens", JSON.stringify(
+            {...localStorageLessens,[value.format('YYYY-MM-DD')]:deleteLocalStorageLessensItem}));
         props.setTimeFormResult({...props.timeFormResult,
             [value.format('YYYY-MM-DD')]:props.timeFormResult[value.format('YYYY-MM-DD')].filter((item)=>item.id!==id)})//Фильтруем массив с записями в конкретной дате
         if(props.successfulLessons.length!==0){
             props.setSuccessfulLessons(props.successfulLessons.filter((item)=>item.id!==id))
         }
+        localStorage.setItem("successfulLessons", JSON.stringify(
+            localStorageSuccessfulLessens.filter((item)=>item.id!==id)));
     }
 
     const dateCellRender = (value) => {
