@@ -51,15 +51,13 @@ const TimeForm = (props) => {
             id:uuidv4() // добавляем уникальный id для каждой записи
         }
         if((localStorageLessens.hasOwnProperty(props.currentDate))){
-            const test23 =localStorageLessens[props.currentDate]
-            test23.push(timeFormat)
+            const currentLessenArray =localStorageLessens[props.currentDate]
+            currentLessenArray.push(timeFormat)
             localStorage.setItem("lessens", JSON.stringify(
-            {...localStorageLessens,[props.currentDate]:[...test23]}));
+            {...localStorageLessens,[props.currentDate]:[...currentLessenArray]}));
         }else{
             localStorage.setItem("lessens", JSON.stringify({...localStorageLessens,[props.currentDate]:[timeFormat]}));
         }
-
-
         props.setTimeFormResult({...props.timeFormResult,
             [props.currentDate]: createCorrectFormDataArray(timeFormat),//ключ это дата , а значение это массив из записей(запись - объект)
         })

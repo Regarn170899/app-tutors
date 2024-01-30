@@ -111,20 +111,19 @@ const CalendarCustom = (props) => {
                 [newDate]: createCorrectFormDataArray({...item,time:newTime}),
             })
             if(localStorageLessens.hasOwnProperty(newDate)){
-                const test23 =localStorageLessens[newDate]
-                test23.push({...item,time:newTime})
+                const currentLessenArray =localStorageLessens[newDate]
+                currentLessenArray.push({...item,time:newTime})
                 localStorage.setItem("lessens", JSON.stringify(
-                    {...localStorageLessens,[newDate]:[...test23]}));
+                    {...localStorageLessens,[newDate]:[...currentLessenArray]}));
             }else{
                 localStorage.setItem("lessens", JSON.stringify({...localStorageLessens,[newDate]:[{...item,time:newTime}]}));
             }deleteCurrentLessen(value,id)
+            setNewDate('')
         }
     }
     const onChange = (value) => {
         setNewDate(value.format('YYYY-MM-DD'))
         setNewTime(value.format('HH:mm'))
-        console.log(value.format('YYYY-MM-DD'));
-        console.log(value.format('HH:mm'));
     };
 
     const dateCellRender = (value) => {
