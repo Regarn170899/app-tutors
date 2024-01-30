@@ -1,9 +1,10 @@
 import React, {  useEffect, useMemo, useState} from 'react';
-import {Calendar, DatePicker, Modal} from 'antd';
+import {Calendar, DatePicker} from 'antd';
 import styles from './Calendar.module.css'
 import {CheckCircleOutlined, DeleteOutlined, RetweetOutlined} from "@ant-design/icons";
 import cx from "classnames";
 import moment from "moment/moment";
+import CustomPopover from "../UI/CustomPopover/CustomPopover";
 
 const getMonthData = (value) => {
 
@@ -14,12 +15,7 @@ const getMonthData = (value) => {
 const CalendarCustom = (props) => {
     const [arrayLessonIds,setArrayLessonIds]=useState([])
     const [newDate,setNewDate]=useState('')
-
-    useEffect(()=>{
-        window.addEventListener('storage', () => {
-            console.log("Change to local storage!");
-        })
-    })
+    const [newTime,setNewTime]=useState('')
 
 
     const getListData = (value) => {
@@ -29,10 +25,12 @@ const CalendarCustom = (props) => {
             localStorageLessens=[]
         }
         let listData=[]
+        // eslint-disable-next-line array-callback-return
         Object.keys(localStorageLessens).map((item)=>{//Создаю массив ключей нашего объекта
             if(value.format('YYYY-MM-DD')===item){//Если выбранная дата соответсвует ключу объекта то добавляю в эту дату информацию о нашем занятии
+                // eslint-disable-next-line array-callback-return
                 localStorageLessens[item].map((currentLesson)=>{
-                    listData.push({type:'success',content:`${currentLesson.name} : ${currentLesson.subject} в ${currentLesson.time}, сумма ${currentLesson.money} `,id:currentLesson.id,
+                    listData.push({type:'success',content:`${currentLesson.subject} в ${currentLesson.time}, сумма ${currentLesson.money} `,id:currentLesson.id,
                         time:currentLesson.time,name:currentLesson.name,subject:currentLesson.subject, money:currentLesson.money,date:value})
                 })
             }
@@ -43,6 +41,7 @@ const CalendarCustom = (props) => {
     useEffect(()=>{
         let localStorageLessens =JSON.parse(localStorage.getItem('successfulLessons'))
         const arrayIds =[]
+        // eslint-disable-next-line array-callback-return
         localStorageLessens.map((lesson)=>{
             arrayIds.push(lesson.id)
         })
@@ -64,6 +63,7 @@ const CalendarCustom = (props) => {
             localStorageLessens=[]
         }
         const arrayIds =[]
+        // eslint-disable-next-line array-callback-return
         localStorageLessens?.map((lesson)=>{
                 arrayIds.push(lesson.id)
             })
@@ -108,31 +108,39 @@ const CalendarCustom = (props) => {
         if(newDate!==''){
             let localStorageLessens =JSON.parse(localStorage.getItem('lessens'))
             props.setTimeFormResult({...localStorageLessens,
-                [newDate]: createCorrectFormDataArray(item),
+                [newDate]: createCorrectFormDataArray({...item,time:newTime}),
             })
             if(localStorageLessens.hasOwnProperty(newDate)){
                 const test23 =localStorageLessens[newDate]
-                test23.push(item)
+                test23.push({...item,time:newTime})
                 localStorage.setItem("lessens", JSON.stringify(
                     {...localStorageLessens,[newDate]:[...test23]}));
             }else{
-                localStorage.setItem("lessens", JSON.stringify({...localStorageLessens,[newDate]:[item]}));
+                localStorage.setItem("lessens", JSON.stringify({...localStorageLessens,[newDate]:[{...item,time:newTime}]}));
             }deleteCurrentLessen(value,id)
         }
     }
-    const onChange = (date, dateString) => {
-        setNewDate(dateString)
+    const onChange = (value) => {
+        setNewDate(value.format('YYYY-MM-DD'))
+        setNewTime(value.format('HH:mm'))
+        console.log(value.format('YYYY-MM-DD'));
+        console.log(value.format('HH:mm'));
     };
 
     const dateCellRender = (value) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const listData = useMemo(()=>getListData(value),[props.timeFormResult]) ;
+        const listData = useMemo(()=>getListData(value),[value]);
+
+       listData.sort((a, b) => parseFloat(a.time) - parseFloat(b.time))
+
         return (
             <div >
                 <ul  onClick={(e)=>e.stopPropagation()} style={{paddingLeft:0}}>
+                    {/* eslint-disable-next-line no-unused-expressions */}
                     {listData.map((item) => (
                         <div  key={item.id}>
-                            <li className={cx(styles.itemDate, { [styles.itemDateActive]: arrayLessonIds.includes(item.id) })}>
+                            <CustomPopover content={<li className={cx(styles.itemDate, { [styles.itemDateActive]: arrayLessonIds.includes(item.id) })}>
+                                <h2>{item.name}</h2>
                                 <p>{item.content}</p>
                                 <div>
                                     <div style={{display:"flex"}}>
@@ -147,14 +155,19 @@ const CalendarCustom = (props) => {
                                         }}><CheckCircleOutlined  title={'Занятие проведено'} style={{ fontSize: '20px',paddingLeft:'10px',color:"green" }}/>
                                         </div>
                                     </div>
-                                    <div style={{display:"flex",alignItems:'center'}} >
-                                        <DatePicker placeholder={'Дата переноса'}  onChange={onChange} />
+                                    <div style={{display:"flex",alignItems:'center', padding:'5px' }} >
+                                        <DatePicker showTime={{ format: 'HH:mm' }}
+                                                    format="YYYY-MM-DD HH:mm"  placeholder={'Дата переноса'}  onChange={onChange} />
                                         <div onClick={()=>rescheduleLesson(item,item.id,value,)}><RetweetOutlined
                                             style={{ fontSize: '20px',paddingLeft:'10px',color:"orange" }} /></div>
                                     </div>
                                 </div>
+                            </li>}>
+                                <div className={cx(styles.itemDate, { [styles.itemDateActive]: arrayLessonIds.includes(item.id) })}>
+                                    {item.name}
+                                </div>
+                                </CustomPopover>
 
-                            </li>
                         </div>
                     ))}
                 </ul>
