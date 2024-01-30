@@ -163,8 +163,7 @@ const CalendarCustom = (props) => {
                                     </div>
                                 </div>
                             </li>}>
-                                <div className={cx(styles.itemDate, { [styles.itemDateActive]: arrayLessonIds.includes(item.id) })}>
-                                    {item.name}
+                                <div className={cx(styles.itemDate, { [styles.itemDateActive]: arrayLessonIds.includes(item.id) })}><b>{item.name}</b> в {item.time}
                                 </div>
                                 </CustomPopover>
 
