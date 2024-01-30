@@ -24,39 +24,15 @@ const items = [
     getItem('База знаний', '3',  <Link to="/"><ContainerOutlined /></Link>),
     ]
 const CustomMenu = () => {
-    const [collapsed, setCollapsed] = useState(false);
-    const toggleCollapsed = () => {
-        setCollapsed(!collapsed);
-    }
+
     return (
         <div>
-            <div
-            >
-                <div style={{
-                    width: 80,
-                }}>
-                    <Button
-                        type="primary"
-                        onClick={toggleCollapsed}
-                        style={{
-                            marginBottom: 8,
-                            marginTop:8,
-
-                        }}
-                    >
-                        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                    </Button>
-                </div>
-
+            <div>
                 <Menu
-                    style={{
-                        height :'100vh',
-                    }}
                     defaultSelectedKeys={['1']}
                     defaultOpenKeys={['sub1']}
-                    mode="inline"
+                    mode="horizontal"
                     theme="dark"
-                    inlineCollapsed={collapsed}
                     items={items}
                 />
             </div>

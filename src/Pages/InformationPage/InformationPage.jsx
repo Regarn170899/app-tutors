@@ -116,12 +116,20 @@ const InformationPage = (props) => {
                 subject: lesson.subject,
                 time: lesson.time,
                 money: lesson.money,
+                date: moment(new Date(lesson.date)).format('YYYY-MM-DD')
             }
     })
 
 
 
     const columns = [
+
+        {
+            title: 'Дата',
+            dataIndex: 'date',
+            key: 'date',
+            ...getColumnSearchProps('date'),
+        },
         {
             title: 'Имя',
             dataIndex: 'name',

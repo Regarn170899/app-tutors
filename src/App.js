@@ -6,6 +6,7 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import CustomMenu from "./Components/CustomMenu/CustomMenu";
 import InformationPage from "./Pages/InformationPage/InformationPage";
 
+
 function App() {
     const [timeFormResult, setTimeFormResult] = useState({})
     const [currentDate, setCurrentDate] = useState('')
@@ -14,8 +15,7 @@ function App() {
     console.log(timeFormResult);
     return (
     <div className="App">
-        <div className={'App-header-container'} ></div>
-        <div className={'App-header-block'}>
+        <div>
             <CustomMenu/>
             <Routes>
                 <Route path="/*" element={<Navigate to={'/'} />} />
