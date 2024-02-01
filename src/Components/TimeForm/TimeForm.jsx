@@ -1,5 +1,6 @@
-import {Button, Form, Input, InputNumber, Modal, Select, TimePicker} from 'antd';
+import {Button, Form, Input, InputNumber, Modal, Radio, Select, TimePicker} from 'antd';
 import {v4 as uuidv4} from 'uuid';
+import {useState} from "react";
 const { Option } = Select;
 const config = {
     rules: [
@@ -15,11 +16,15 @@ const onFinishFailed = (errorInfo) => {
 };
 const format = 'HH:mm';
 const TimeForm = (props) => {
+    const [valueRadioTimeLesson, setValueRadioTimeLesson] = useState("30 мин.");
+    const onChange = (e) => {
+        setValueRadioTimeLesson(e.target.value);
+    }
     const selectAfter = (
         <Select
             defaultValue="RUB"
             style={{
-                width: 60,
+                width: 50,
             }}
         >
             <Option value="RUB">₽</Option>
@@ -66,7 +71,12 @@ const TimeForm = (props) => {
     };
     return (
         <>
-            <Modal title="Запись" open={props.isModalOpen} onCancel={handleCancel} footer={null}>
+            <Modal
+                title="Запись"
+                open={props.isModalOpen}
+                onCancel={handleCancel}
+                footer={null}
+                width={600}>
                 <Form
                     form={form}
                     name="basic"
@@ -119,6 +129,21 @@ const TimeForm = (props) => {
                         label="Время" {...config}
                     >
                         <TimePicker  format={format}/>
+                    </Form.Item>
+                    <Form.Item
+                        name="timeLesson"
+                        label="Время урока"
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                    >
+                        <Radio.Group onChange={onChange} value={valueRadioTimeLesson}>
+                            <Radio value={"30 мин."}>30 мин.</Radio>
+                            <Radio value={"45 мин."}>45 мин.</Radio>
+                            <Radio value={"60 мин."}>60 мин.</Radio>
+                        </Radio.Group>
                     </Form.Item>
                     <Form.Item
                         name="money"
