@@ -9,6 +9,9 @@
 .itemDateActive{
     border: 2px solid greenyellow;
 }
+.itemDateActiveUnpaid{
+    border: 2px solid #ff8100;
+}
 .itemDateDelete{
     padding-left: 10px;
     width: 50px;
