@@ -1,4 +1,4 @@
-import {Button, Form, Input, Modal, Select, TimePicker} from 'antd';
+import {Button, Form, Input, InputNumber, Modal, Select, TimePicker} from 'antd';
 import {v4 as uuidv4} from 'uuid';
 const { Option } = Select;
 const config = {
@@ -13,7 +13,20 @@ const config = {
 const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
 };
+const format = 'HH:mm';
 const TimeForm = (props) => {
+    const selectAfter = (
+        <Select
+            defaultValue="RUB"
+            style={{
+                width: 60,
+            }}
+        >
+            <Option value="RUB">₽</Option>
+            <Option value="USD">$</Option>
+            <Option value="EUR">€</Option>
+        </Select>
+    );
 
     const handleCancel = () => {
         props.setIsModalOpen(false);
@@ -27,10 +40,23 @@ const TimeForm = (props) => {
     }
     const [form] = Form.useForm();
     const onFinish = (values) => {
+        let localStorageLessens =JSON.parse(localStorage.getItem('lessens'))
+        if(localStorageLessens===null){
+            localStorage.setItem("lessens", JSON.stringify({}));
+            localStorageLessens={}
+        }
         const timeFormat = {
             ...values,
-            time : values.time.format('HH:mm:ss'),
-            id:uuidv4() // обавляем уникальный id для каждой записи
+            time : values.time.format('HH:mm'),
+            id:uuidv4() // добавляем уникальный id для каждой записи
+        }
+        if((localStorageLessens.hasOwnProperty(props.currentDate))){
+            const currentLessenArray =localStorageLessens[props.currentDate]
+            currentLessenArray.push(timeFormat)
+            localStorage.setItem("lessens", JSON.stringify(
+            {...localStorageLessens,[props.currentDate]:[...currentLessenArray]}));
+        }else{
+            localStorage.setItem("lessens", JSON.stringify({...localStorageLessens,[props.currentDate]:[timeFormat]}));
         }
         props.setTimeFormResult({...props.timeFormResult,
             [props.currentDate]: createCorrectFormDataArray(timeFormat),//ключ это дата , а значение это массив из записей(запись - объект)
@@ -83,9 +109,8 @@ const TimeForm = (props) => {
                             placeholder="Выберите предмет"
                             allowClear
                         >
-                            <Option value="Russian">Русский язык</Option>
-                            <Option value="Math">Математика</Option>
-                            <Option value="English">Английский язык</Option>
+                            <Option value="Английский язык">Английский язык</Option>
+                            <Option value="Итальянский язык">Итальянский язык</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item
@@ -93,7 +118,13 @@ const TimeForm = (props) => {
                         name="time"
                         label="Время" {...config}
                     >
-                        <TimePicker/>
+                        <TimePicker  format={format}/>
+                    </Form.Item>
+                    <Form.Item
+                        name="money"
+                        label="Сумма"
+                    >
+                        <InputNumber type='number' addonAfter={selectAfter} defaultValue={''} />
                     </Form.Item>
                     <Form.Item
                         wrapperCol={{
