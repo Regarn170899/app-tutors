@@ -12,7 +12,6 @@ const config = {
     ],
 };
 const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
 };
 const format = 'HH:mm';
 const TimeForm = (props) => {
@@ -136,6 +135,7 @@ const TimeForm = (props) => {
                         rules={[
                             {
                                 required: true,
+                                message: 'Введите сумму',
                             },
                         ]}
                     >
@@ -146,10 +146,16 @@ const TimeForm = (props) => {
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                        de
                         name="money"
                         label="Сумма"
                     >
-                        <InputNumber type='number' addonAfter={selectAfter} defaultValue={''} />
+                        <InputNumber type='number'  addonAfter={selectAfter} defaultValue={0} />
                     </Form.Item>
                     <Form.Item
                         wrapperCol={{

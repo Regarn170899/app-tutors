@@ -12,7 +12,6 @@ function App() {
     const [currentDate, setCurrentDate] = useState('')
     const [successfulLessons, setSuccessfulLessons] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
-    console.log(timeFormResult);
     return (
     <div className="App">
         <div>
