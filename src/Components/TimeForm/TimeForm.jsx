@@ -135,7 +135,7 @@ const TimeForm = (props) => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Введите сумму',
+                                message: 'Укажите время урока',
                             },
                         ]}
                     >
@@ -149,6 +149,7 @@ const TimeForm = (props) => {
                         rules={[
                             {
                                 required: true,
+                                message: 'Введите сумму'
                             },
                         ]}
                         de
