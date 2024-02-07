@@ -109,9 +109,10 @@ const InformationPage = (props) => {
     });
 
     let localStorageSuccessfulLessens =JSON.parse(localStorage.getItem('successfulLessons'))
+    let localStorageSuccessfulUnpaidLessons =JSON.parse(localStorage.getItem('successfulUnpaidLessons'))
     const dataSource = localStorageSuccessfulLessens.map((lesson)=>{
         return{
-                key: "1",
+                key: lesson.id,
                 name: lesson.name,
                 subject: lesson.subject,
                 time: lesson.time,
@@ -120,11 +121,20 @@ const InformationPage = (props) => {
                 date: moment(new Date(lesson.date)).format('YYYY-MM-DD')
             }
     })
+    const dataSourceSuccessfulUnpaidLessons = localStorageSuccessfulUnpaidLessons.map((lesson)=>{
+        return{
+            key: lesson.id,
+            name: lesson.name,
+            subject: lesson.subject,
+            time: lesson.time,
+            money: lesson.money,
+            date: moment(new Date(lesson.date)).format('YYYY-MM-DD')
+        }
+    })
 
 
 
     const columns = [
-
         {
             title: 'Дата',
             dataIndex: 'date',
@@ -161,23 +171,49 @@ const InformationPage = (props) => {
             ...getColumnSearchProps('timeLesson'),
         },
     ];
-
+    const columnSuccessfulUnpaidLessons = [
+        {
+            title: 'Дата',
+            dataIndex: 'date',
+            key: 'date',
+            ...getColumnSearchProps('date'),
+        },
+        {
+            title: 'Имя',
+            dataIndex: 'name',
+            key: 'name',
+            ...getColumnSearchProps('name'),
+        },
+        {
+            title: 'Предмет',
+            dataIndex: 'subject',
+            key: 'subject',
+            ...getColumnSearchProps('subject'),
+        },
+        {
+            title: 'Время',
+            dataIndex: 'time',
+            key: 'time',
+            ...getColumnSearchProps('time'),
+        },
+    ];
 
     return (
         <div style={{width:'100%', paddingTop:'40px'}}>
             <h2>Проведённые занятия</h2>
             <Table   dataSource={dataSource} columns={columns} />
+            <h2>Проведённые не оплаченные занятия</h2>
+            <Table   dataSource={dataSourceSuccessfulUnpaidLessons} columns={columnSuccessfulUnpaidLessons} />
             <Row >
                 {Object.keys(monthMoney).map((item)=>{
                     if(monthMoney[item]!==0){
                         return(
-                            <Col span={10}>
+                            <Col key={item.id} span={10}>
                                 <Statistic title={`Заработок за ${item} месяц`} value={monthMoney[item]}  />
                             </Col>
                         )
                     }
                 })}
-
             </Row>
         </div>
     );

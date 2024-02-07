@@ -11,6 +11,7 @@ function App() {
     const [timeFormResult, setTimeFormResult] = useState({})
     const [currentDate, setCurrentDate] = useState('')
     const [successfulLessons, setSuccessfulLessons] = useState([])
+    const [successfulUnpaidLessons, setSuccessfulUnpaidLessons] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
     <div className="App">
@@ -26,7 +27,9 @@ function App() {
                                   timeFormResult={timeFormResult}
                                   setTimeFormResult={setTimeFormResult}/>
 
-                        <Calendar setSuccessfulLessons={setSuccessfulLessons}
+                        <Calendar setSuccessfulUnpaidLessons={setSuccessfulUnpaidLessons}
+                                  successfulUnpaidLessons={successfulUnpaidLessons}
+                                  setSuccessfulLessons={setSuccessfulLessons}
                                   successfulLessons={successfulLessons}
                                   setTimeFormResult={setTimeFormResult}
                                   timeFormResult={timeFormResult}
