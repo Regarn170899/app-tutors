@@ -5,6 +5,7 @@ import {useState} from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
 import CustomMenu from "./Components/CustomMenu/CustomMenu";
 import InformationPage from "./Pages/InformationPage/InformationPage";
+import StudentsPage from "./Pages/StudentsPage/StudentsPage";
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
     const [successfulLessons, setSuccessfulLessons] = useState([])
     const [successfulUnpaidLessons, setSuccessfulUnpaidLessons] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [students, setStudents] = useState([])
     return (
     <div className="App">
         <div>
@@ -39,6 +41,7 @@ function App() {
                     </>
                 }/>
                 <Route path="/about" element={<InformationPage successfulLessons={successfulLessons}/>}/>
+                <Route path="/students" element={<StudentsPage students={students}/>}/>
             </Routes>
         </div>
 

@@ -11,8 +11,6 @@ const config = {
         },
     ],
 };
-const onFinishFailed = (errorInfo) => {
-};
 const format = 'HH:mm';
 const TimeForm = (props) => {
     const [valueRadioTimeLesson, setValueRadioTimeLesson] = useState("30 мин.");
@@ -89,7 +87,6 @@ const TimeForm = (props) => {
                         remember: true,
                     }}
                     onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
                     <Form.Item
@@ -152,7 +149,6 @@ const TimeForm = (props) => {
                                 message: 'Введите сумму'
                             },
                         ]}
-                        de
                         name="money"
                         label="Сумма"
                     >
