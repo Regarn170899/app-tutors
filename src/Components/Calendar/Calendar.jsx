@@ -35,8 +35,8 @@ const CalendarCustom = (props) => {
             if(value.format('YYYY-MM-DD')===item){//Если выбранная дата соответсвует ключу объекта то добавляю в эту дату информацию о нашем занятии
                 // eslint-disable-next-line array-callback-return
                 localStorageLessens[item].map((currentLesson)=>{
-                    listData.push({type:'success',content:`${currentLesson.subject} в ${currentLesson.time}, сумма ${currentLesson.money} `,id:currentLesson.id,
-                        time:currentLesson.time,name:currentLesson.name,subject:currentLesson.subject, money:currentLesson.money,date:value})
+                    listData.push({type:'success',content:`${currentLesson.subject} в ${currentLesson.time}, сумма ${currentLesson.money}, время урока: ${currentLesson.timeLesson}, `,id:currentLesson.id,
+                        time:currentLesson.time,name:currentLesson.name,subject:currentLesson.subject, money:currentLesson.money, timeLesson:currentLesson.timeLesson,date:value})
                 })
             }
         })

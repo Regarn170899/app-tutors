@@ -5,6 +5,8 @@
     border: 2px solid cornflowerblue;
     border-radius: 10px;
     align-items: center;
+    text-align: center;
+
 }
 .itemDateActive{
     border: 2px solid greenyellow;

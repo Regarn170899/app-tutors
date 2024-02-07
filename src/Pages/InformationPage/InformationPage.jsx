@@ -117,6 +117,7 @@ const InformationPage = (props) => {
                 subject: lesson.subject,
                 time: lesson.time,
                 money: lesson.money,
+                timeLesson:lesson.timeLesson,
                 date: moment(new Date(lesson.date)).format('YYYY-MM-DD')
             }
     })
@@ -163,6 +164,11 @@ const InformationPage = (props) => {
             dataIndex: 'money',
             key: 'money',
             ...getColumnSearchProps('money'),
+        },{
+            title: 'Время урока',
+            dataIndex: 'timeLesson',
+            key: 'timeLesson',
+            ...getColumnSearchProps('timeLesson'),
         },
     ];
     const columnSuccessfulUnpaidLessons = [

@@ -21,7 +21,7 @@ function getItem(label, key, icon, children, type) {
 const items = [
     getItem('Главная', '1', <Link to="/"><DesktopOutlined /></Link>),
     getItem('Информация', '2', <Link to="/about"><PieChartOutlined /></Link>),
-    getItem('База знаний', '3',  <Link to="/"><ContainerOutlined /></Link>),
+    getItem('Ученики', '3',  <Link to="/students"><ContainerOutlined /></Link>),
     ]
 const CustomMenu = () => {
 
